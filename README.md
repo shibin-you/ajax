@@ -17,6 +17,7 @@ $.ajax({
 })
 //jsonp
 $.ajax({
+  url:'...'
   type:'jsonp',
   jsonp:'jsonp',
   data:{
