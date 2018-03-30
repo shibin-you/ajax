@@ -58,7 +58,7 @@ function Request() {
     str = str.slice(0, str.length - 1)
     return str
   }
-  util.jsonp = function(opt, reject, resolve) {
+  util.jsonp = function(opt, resolve, reject) {
     var callbackName = opt.jsonp;   
     var head = document.getElementsByTagName('head')[0]
     var data = formatParams(opt.data);
