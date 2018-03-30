@@ -53,7 +53,6 @@ function Request() {
   util.jsonp=function(opt){
     var callbackName = opt.jsonp;   
     var head = document.getElementsByTagName('head')[0]
-    opt.data['callback'] = callbackName
     var data = formatParams(opt.data);
     var script = document.createElement('script')
     head.appendChild(script)
