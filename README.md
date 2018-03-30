@@ -18,7 +18,6 @@ $.ajax({
   }
 })
 
-// get或post请求
 $.ajax({
   url:'...',
   type:'get'
