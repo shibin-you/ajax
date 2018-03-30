@@ -18,6 +18,8 @@ function Request() {
       xhr.open(type, url, true)
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
       xhr.send(dataArr.join('&'))
+    } else if (type === "JSONP") {
+      util.jsonp(opt)
     }
     xhr.onload = function() {
       var res = JSON.parse(xhr.responseText)
@@ -50,7 +52,7 @@ function Request() {
     str = str.slice(0, str.length - 1)
     return str
   }
-  util.jsonp=function(opt){
+  util.jsonp = function(opt) {
     var callbackName = opt.jsonp;   
     var head = document.getElementsByTagName('head')[0]
     var data = formatParams(opt.data);
@@ -60,8 +62,8 @@ function Request() {
       head.removeChild(script);   
       clearTimeout(script.timer);   
       window[callbackName] = null;  
-      if(opt.success&&opt.success instanceof Function){
-        opt.success.call(window,json)
+      if (opt.success && opt.success instanceof Function) {
+        opt.success.call(window, json)
       } 
     }
     script.src = opt.url + '?' + data
@@ -77,6 +79,7 @@ function Request() {
   }
   return util
 }
+
 function formatParams(data) {
   var arr = [];
   for (var name in data) {

@@ -2,7 +2,7 @@ function Request() {
   var util = {}
 
   util.ajax = function(opt) {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
       var xhr = XMLHttpRequest ? new XMLHttpRequest : new ActiveXObject
       var type = opt.type.toUpperCase(),
         data = opt.data,
@@ -19,16 +19,18 @@ function Request() {
         xhr.open(type, url, true)
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
         xhr.send(dataArr.join('&'))
+      } else if (type === 'JSONP') {
+        util.jsonp(opt, reject, resolve)
       }
       xhr.onload = function() {
         var res = JSON.parse(xhr.responseText)
         if (xhr.status === 200 || xhr.status === 304) {
-            resolve(res)
+          resolve(res)
           if (opt.success && opt.success instanceof Function) {
-              opt.success.call(xhr, res)
+            opt.success.call(xhr, res)
           }
         } else {
-            reject(res)
+          reject(res)
           if (opt.error && opt.error instanceof Function) {
             opt.error.call(xhr, res)
 
@@ -36,7 +38,6 @@ function Request() {
         }
       }
     })
-
   }
 
   util.inQueryUrl = function(url, data) {
@@ -51,40 +52,39 @@ function Request() {
     str = str.slice(0, str.length - 1)
     return str
   }
-  util.jsonp=function(opt){
-    return new Promise((resolve,reject)=>{
-      var callbackName = opt.jsonp;   
-      var head = document.getElementsByTagName('head')[0]
-      var data = formatParams(opt.data);
-      var script = document.createElement('script')
-      head.appendChild(script)
-      window[callbackName] = function(json) {   
-        head.removeChild(script);   
-        clearTimeout(script.timer);   
-        window[callbackName] = null;  
-        resolve(json)
-        if(opt.success&&opt.success instanceof Function){
-          opt.success.call(window,json)
-        } 
-      }
-      script.src = opt.url + '?' + data
-      if (opt.time) {
-        script.timer = setTimeout(function() {
-          window[callbackName] = null;
-          head.removeChild(script);
-          reject({
-            message: '超时'
-          })
-          opt.error && opt.error({
-            message: '超时'
-          });
-        }, time)
-      }
-    })
+  util.jsonp = function(opt, reject, resolve) {
+    var callbackName = opt.jsonp;   
+    var head = document.getElementsByTagName('head')[0]
+    var data = formatParams(opt.data);
+    var script = document.createElement('script')
+    head.appendChild(script)
+    window[callbackName] = function(json) {   
+      head.removeChild(script);   
+      clearTimeout(script.timer);   
+      window[callbackName] = null;  
+      resolve(json)
+      if (opt.success && opt.success instanceof Function) {
+        opt.success.call(window, json)
+      } 
+    }
+    script.src = opt.url + '?' + data
+    if (opt.time) {
+      script.timer = setTimeout(function() {
+        window[callbackName] = null;
+        head.removeChild(script);
+        reject({
+          message: '超时'
+        })
+        opt.error && opt.error({
+          message: '超时'
+        });
+      }, time)
+    }
 
   }
   return util
 }
+
 function formatParams(data) {
   var arr = [];
   for (var name in data) {
