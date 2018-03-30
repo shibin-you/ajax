@@ -18,6 +18,9 @@ function Request() {
       } else if (type === 'POST') {
         xhr.open(type, url, true)
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        for(var k in opt.headers){
+            xhr.setRequestHeader(k,opt.headers)
+        }
         xhr.send(dataArr.join('&'))
       } else if (type === 'JSONP') {
         util.jsonp(opt, reject, resolve)
