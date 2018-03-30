@@ -14,6 +14,9 @@ function Request() {
       if (type === 'GET') {
         url = (url + '?' + dataArr.join('&')).replace(/\?$/g, '')
         xhr.open(type, url, true)
+        for(var k in opt.headers){
+            xhr.setRequestHeader(k,opt.headers)
+        }
         xhr.send()
       } else if (type === 'POST') {
         xhr.open(type, url, true)
