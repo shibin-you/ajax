@@ -14,6 +14,7 @@ router.get('/get', (ctx, next) => {
 })
 router.post('/post', (ctx, next) => {
    ctx.set('Access-Control-Allow-Origin','*')
+   console.log(ctx);
   // ctx.router available
   ctx.body=JSON.stringify({
     status:1,
@@ -23,6 +24,7 @@ router.post('/post', (ctx, next) => {
 })
 router.get('/jsonp', (ctx, next) => {
   // ctx.router available
+
   ctx.body=`jsonp(${JSON.stringify({
     status:1,
     data:'jsonp请求成功'
