@@ -6,10 +6,11 @@ Encapsulated the Ajax request of the native JS
 
 ```javascript
 var $=new Request()
-// get或post请求
+// get or post
 $.ajax({
   url:'...',
   type:'get',
+  headers:headers,
   success:function(res){
     console.log(res)
   },

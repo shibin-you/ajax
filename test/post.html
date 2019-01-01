@@ -9,35 +9,23 @@
 <body>
 
 </body>
-<script src="../src/ajax.es.js" charset="utf-8"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="../src/ajax.js" charset="utf-8"></script>
 <script type="text/javascript">
+var $=new Request()
+var a
 $.ajax({
-  type:'post',
   url:'http://localhost:3000/post',
-  headers:{
-    a:'123'
+  type:'post',
+  data:{
+    a:'',
+    name:'shibin-you'
   },
-  success:function(data){
-    console.log(data);
+  success:function(res){
+    console.log(res)
+  },
+  error:function(err){
+    console.log(err);
   }
 })
-// var $=new Request()
-// $.ajax({
-//   url:'http://localhost:3000/post',
-//   type:'post',
-//   headers:{
-//     'aaaaaaa':'123'
-//   },
-//   data:{
-//     name:'shibin-you'
-//   },
-//   success:function(res){
-//     console.log(res)
-//   },
-//   error:function(err){
-//     console.log(err);
-//   }
-// })
 </script>
 </html>

@@ -13,7 +13,7 @@ function Request() {
       }
     }
     if (type === 'GET') {
-      url = (url + '?' + dataArr.join('&')).replace(/\?$/g, '')
+      url =dataArr.length?(url + (url.indexOf('?')>-1?'&':'?') + dataArr.join('&')).replace(/\?$/g, ''):url
       xhr.open(type, url, true)
       for (var k in opt.headers) {
         xhr.setRequestHeader(k, opt.headers)
