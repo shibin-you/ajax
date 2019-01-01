@@ -8,20 +8,22 @@ function Request() {
       url = opt.url,
       dataArr = []
     for (var k in data) {
-      dataArr.push(k + '=' + data[k])
+      if (typeof data[k] !== 'undefined') {
+        dataArr.push(k + '=' + data[k])
+      }
     }
     if (type === 'GET') {
       url = (url + '?' + dataArr.join('&')).replace(/\?$/g, '')
       xhr.open(type, url, true)
-      for(var k in opt.headers){
-          xhr.setRequestHeader(k,opt.headers)
+      for (var k in opt.headers) {
+        xhr.setRequestHeader(k, opt.headers)
       }
       xhr.send()
     } else if (type === 'POST') {
       xhr.open(type, url, true)
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-      for(var k in opt.headers){
-          xhr.setRequestHeader(k,opt.headers)
+      for (var k in opt.headers) {
+        xhr.setRequestHeader(k, opt.headers)
       }
       xhr.send(dataArr.join('&'))
     } else if (type === "JSONP") {
@@ -59,18 +61,18 @@ function Request() {
     return str
   }
   util.jsonp = function(opt) {
-    var callbackName = opt.jsonp;   
+    var callbackName = opt.jsonp;
     var head = document.getElementsByTagName('head')[0]
     var data = formatParams(opt.data);
     var script = document.createElement('script')
     head.appendChild(script)
-    window[callbackName] = function(json) {   
-      head.removeChild(script);   
-      clearTimeout(script.timer);   
-      window[callbackName] = null;  
+    window[callbackName] = function(json) {
+      head.removeChild(script);
+      clearTimeout(script.timer);
+      window[callbackName] = null;
       if (opt.success && opt.success instanceof Function) {
         opt.success.call(window, json)
-      } 
+      }
     }
     script.src = opt.url + '?' + data
     if (opt.time) {
