@@ -22,9 +22,7 @@ router.post('/post', (ctx, next) => {
   next()
 })
 router.get('/jsonp', (ctx, next) => {
-  // ctx.router available
-
-  ctx.body=`jsonp(${JSON.stringify({
+  ctx.body=`${ctx.query.callback}(${JSON.stringify({
     status:1,
     data:'jsonp请求成功'
   })})`

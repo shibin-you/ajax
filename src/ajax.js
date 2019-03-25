@@ -1,6 +1,24 @@
 function Request() {
   var util = {}
-
+  util.get = util.GET = function(url, params, cb) {
+    this._formatRequest(url, 'GET', params, db)
+  }
+  util.post = util.POST = function(url, data, cb) {
+    this._formatRequest(url, 'POST', data, cb)
+  }
+  util._formatRequest = function(url, type, data, cb) {
+    util.ajax({
+      url: url,
+      type: type,
+      data: data,
+      success: function(res) {
+        cb(res)
+      },
+      error: function(err) {
+        cb('', err)
+      }
+    })
+  }
   util.ajax = function(opt) {
     var xhr = XMLHttpRequest ? new XMLHttpRequest : new ActiveXObject
     var type = opt.type.toUpperCase(),
@@ -13,7 +31,7 @@ function Request() {
       }
     }
     if (type === 'GET') {
-      url =dataArr.length?(url + (url.indexOf('?')>-1?'&':'?') + dataArr.join('&')).replace(/\?$/g, ''):url
+      url = dataArr.length ? (url + (url.indexOf('?') > -1 ? '&' : '?') + dataArr.join('&')).replace(/\?$/g, '') : url
       xhr.open(type, url, true)
       for (var k in opt.headers) {
         xhr.setRequestHeader(k, opt.headers)
@@ -60,10 +78,12 @@ function Request() {
     str = str.slice(0, str.length - 1)
     return str
   }
+  let _jpid = 0
   util.jsonp = function(opt) {
-    var callbackName = opt.jsonp;
+    var callbackName = opt.jsonp || ((opt.data && opt.data.callback) ? opt.data.callback : '_jp' + _jpid++)
+    opt.data.callback = callbackName
     var head = document.getElementsByTagName('head')[0]
-    var data = formatParams(opt.data);
+    var data = formatParams(opt.data)
     var script = document.createElement('script')
     head.appendChild(script)
     window[callbackName] = function(json) {
