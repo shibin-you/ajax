@@ -1,24 +1,18 @@
 import https from 'https'
-import * as qs from 'querystring'
+import http from 'http'
+import qs from 'querystring'
 
-/**
-nodejs网络请求
-*/
-export const getReq = (url, params, ) => (new Promise((resolve, reject) => {
-  let dataArr = []
-  for (var k in params) {
-    if (typeof params[k] !== 'undefined') {
-      let key = params[k]
-      if (typeof params[k] === 'object') {
-        key = JSON.stringify(params[k])
-      }
-      dataArr.push(k + '=' + key)
-    }
-  }
-  url = dataArr.length ? (url + (url.indexOf('?') > -1 ? '&' : '?') + dataArr.join('&')).replace(/\?$/g, '') : url
-  https.get(url, {
-    headers: headers
-  }, res => {
+
+const getReqType = url => {
+  return url.startsWith('https://') ? https : http
+}
+
+
+export const getReq = (url, params, options = {}) => (new Promise((resolve, reject) => {
+  let request = getReqType(url)
+  let keys = Object.keys(params)
+  url = keys.length ? (url + (url.indexOf('?') > -1 ? '&' : '?') + qs.stringify(params).replace(/\?$/g, '')) : url
+  request.get(url, options, res => {
     var data = ''
     res.on('data', (chunk) => {
       data += chunk;
@@ -31,9 +25,20 @@ export const getReq = (url, params, ) => (new Promise((resolve, reject) => {
   })
 }))
 
-export const postReq = (url, body) => (new Promise((resolve, reject) => {
-  let req = https.request(url, {
-    headers
+export const postReq = (url, body, options = {}) => (new Promise((resolve, reject) => {
+  let request = getReqType(url)
+  let content = qs.stringify(body)
+  options.headers = options.headers ? options.headers['content-type'] ? options.headers : {
+    ...options.headers,
+    'content-type': 'application/x-www-form-urlencoded'
+  } : {
+    'content-type': 'application/x-www-form-urlencoded'
+  }
+  options.headers['Content-Length'] = Buffer.byteLength(content, 'utf8')
+
+  let req = request.request(url, {
+    ...options,
+    method: 'POST',
   }, res => {
     res.setEncoding('utf8');
     var data = ''
@@ -41,12 +46,12 @@ export const postReq = (url, body) => (new Promise((resolve, reject) => {
       data += chunk
     })
     res.on('end', () => {
-      console.log(data);
+      resolve(data)
     })
   }).on('error', err => {
     reject(err)
   })
-  req.write(qs.stringify(content))
+  req.write(qs.stringify(body))
   req.end()
 }))
 
@@ -62,6 +67,7 @@ export const jsonp = async (url, params) => {
   eval(`function ${callback}(data){res=data}   ` + data)
   return res
 }
+
 
 
 
