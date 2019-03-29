@@ -1,5 +1,6 @@
-var __jpid = 0
+import "babel-polyfill"
 
+var __jpid = 0
 class Request {
   get(url, params) {
     return new Promise((resolve, reject) => {
@@ -23,10 +24,10 @@ class Request {
   ajax(opt) {
     return new Promise((resolve, reject) => {
       var xhr = XMLHttpRequest ? new XMLHttpRequest : new ActiveXObject
-      var type = opt.type.toUpperCase(),
-        data = opt.data,
-        url = opt.url,
-        dataArr = []
+      var type = opt.type.toUpperCase()
+      let data = opt.data
+      let url = opt.url
+      let dataArr = []
       for (var k in data) {
         if (typeof data[k] !== 'undefined') {
           dataArr.push(k + '=' + data[k])
@@ -113,6 +114,6 @@ function formatParams(data) {
 }
 // 获取随机数
 function random() {
-  return Math.floor(Math.random() * 10000 + 500);
+  return Math.floor(Math.random() * 100000);
 }
-// export default Request
+export default Request

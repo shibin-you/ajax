@@ -4,7 +4,9 @@
   "description": "Encapsulated the Ajax request of the native JS",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app"
+    "start": "node app",
+    "build": "rollup --config rollup.config.js",
+    "build1": "babel src --out-dir dist"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,16 @@
   },
   "homepage": "https://github.com/shibin-you/ajax#readme",
   "dependencies": {
+    "@babel/core": "^7.4.0",
     "koa": "^2.5.0",
     "koa-router": "^7.4.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.4.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-latest": "^6.24.1",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-node-resolve": "^4.0.1"
   }
 }
